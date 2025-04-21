@@ -1,0 +1,25 @@
+# ninja log v5
+0	167	7665837747420584	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/EWARM/startup_stm32f103x6.o	72296fa9be36255b
+121	343	7665837750427392	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/CMSIS/system_stm32f1xx.o	9f5cc6999f9c8a38
+72	372	7665837750603425	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/stm32f1xx_it.o	153cf129344257d4
+107	393	7665837750446993	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal.o	76dd4869f56befab
+53	412	7665837750446993	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/stm32f1xx_hal_msp.o	fda924ecbaaa8bec
+88	430	7665837750446993	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/usart.o	64827bd73eccbcda
+21	448	7665837750286347	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/gpio.o	f4dd960a32b6b0fd
+169	478	7665837750971487	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_cortex.o	6ac56628f47c1d0e
+151	484	7665837751271102	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_flash.o	a3a171a2462dd299
+139	489	7665837751762426	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_dma.o	5c2c0e7209db8619
+38	494	7665837751105302	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_flash_ex.o	8a216a5e69e452d1
+349	587	7665837753102649	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_gpio_ex.o	cfc9efe4e63575f3
+377	617	7665837753439078	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_pwr.o	9f9bd38165c0b4bd
+435	636	7665837753607790	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_rcc_ex.o	f7185ab2782f48d9
+315	650	7665837753607790	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_exti.o	1fc69028b236b53f
+417	670	7665837753974366	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_gpio.o	8474b1ec5dd099bc
+398	769	7665837754923019	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_rcc.o	cb0ec62cff9584a4
+452	1095	7665837758091430	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_uart.o	86e4e960b19cb3a6
+0	132	7665840162671272	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/main.o	ec794af902f4fbc6
+135	206	7665840163429622	C:/stm32_test/uartCLI/EWARM/uartCLI/Exe/uartCLI.out	6b64eaa141497326
+216	228	7665840163752444	C:/stm32_test/uartCLI/EWARM/uartCLI/Exe/uartCLI.hex	2a728d7945435a4a
+2	175	7666564660618688	C:/stm32_test/uartCLI/EWARM/uartCLI/Obj/Application/User/Core/main.o	ec794af902f4fbc6
+179	248	7666564661500998	C:/stm32_test/uartCLI/EWARM/uartCLI/Exe/uartCLI.out	6b64eaa141497326
+258	271	7666564661787675	C:/stm32_test/uartCLI/EWARM/uartCLI/Exe/uartCLI.hex	2a728d7945435a4a
