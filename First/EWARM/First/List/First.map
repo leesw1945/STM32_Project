@@ -1,46 +1,46 @@
 ###############################################################################
 #
-# IAR ELF Linker V9.30.1.335/W64 for ARM                  21/Apr/2025  15:22:54
+# IAR ELF Linker V9.30.1.335/W64 for ARM                  25/Apr/2025  14:40:29
 # Copyright 2007-2022 IAR Systems AB.
 #
-#    Output file  =  C:\stm32_test\First\EWARM\First\Exe\First.out
-#    Map file     =  C:\stm32_test\First\EWARM\First\List\First.map
+#    Output file  =  C:\stm32\First\EWARM\First\Exe\First.out
+#    Map file     =  C:\stm32\First\EWARM\First\List\First.map
 #    Command line =
-#        -f C:\stm32_test\First\EWARM\First\Exe\First.out.rsp
-#        (C:\stm32_test\First\EWARM\First\Obj\Application\User\Core\gpio.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\Core\main.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\EWARM\startup_stm32f103x6.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_cortex.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_dma.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_exti.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_flash.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_flash_ex.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_gpio.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_gpio_ex.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\Core\stm32f1xx_hal_msp.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pcd.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pcd_ex.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pwr.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_rcc.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_rcc_ex.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_uart.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\Core\stm32f1xx_it.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_ll_usb.o
-#        C:\stm32_test\First\EWARM\First\Obj\Drivers\CMSIS\system_stm32f1xx.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\Core\usart.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usb_device.o
-#        C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_cdc.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usbd_cdc_if.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target\usbd_conf.o
-#        C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_core.o
-#        C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_ctlreq.o
-#        C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usbd_desc.o
-#        C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_ioreq.o
-#        --no_out_extension -o C:\stm32_test\First\EWARM\First\Exe\First.out
+#        -f C:\stm32\First\EWARM\First\Exe\First.out.rsp
+#        (C:\stm32\First\EWARM\First\Obj\Application\User\Core\gpio.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\Core\main.o
+#        C:\stm32\First\EWARM\First\Obj\Application\EWARM\startup_stm32f103x6.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_cortex.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_dma.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_exti.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_flash.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_flash_ex.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_gpio.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_gpio_ex.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\Core\stm32f1xx_hal_msp.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pcd.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pcd_ex.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_pwr.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_rcc.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_rcc_ex.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_hal_uart.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\Core\stm32f1xx_it.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver\stm32f1xx_ll_usb.o
+#        C:\stm32\First\EWARM\First\Obj\Drivers\CMSIS\system_stm32f1xx.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\Core\usart.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usb_device.o
+#        C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_cdc.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usbd_cdc_if.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target\usbd_conf.o
+#        C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_core.o
+#        C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_ctlreq.o
+#        C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\App\usbd_desc.o
+#        C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library\usbd_ioreq.o
+#        --no_out_extension -o C:\stm32\First\EWARM\First\Exe\First.out
 #        --redirect _Printf=_PrintfFullNoMb --redirect _Scanf=_ScanfFullNoMb
-#        --map C:\stm32_test\First\EWARM\First\List\First.map --config
-#        C:\stm32_test\First\EWARM/stm32f103x6_flash.icf --semihosting --entry
+#        --map C:\stm32\First\EWARM\First\List\First.map --config
+#        C:\stm32\First\EWARM/stm32f103x6_flash.icf --semihosting --entry
 #        __iar_program_start --vfe --text_out locale --cpu=Cortex-M3
 #        --fpu=None)
 #
@@ -266,12 +266,12 @@ command line/config:
     -------------------------------------------------
     Total:
 
-C:\stm32_test\First\EWARM\First\Obj\Application\EWARM: [1]
+C:\stm32\First\EWARM\First\Obj\Application\EWARM: [1]
     startup_stm32f103x6.o       396
     -------------------------------------------------
     Total:                      396
 
-C:\stm32_test\First\EWARM\First\Obj\Application\User\Core: [2]
+C:\stm32\First\EWARM\First\Obj\Application\User\Core: [2]
     gpio.o                      124
     main.o                      244       26       56
     stm32f1xx_hal_msp.o          68
@@ -280,24 +280,24 @@ C:\stm32_test\First\EWARM\First\Obj\Application\User\Core: [2]
     -------------------------------------------------
     Total:                      736       26      128
 
-C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\App: [3]
+C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\App: [3]
     usb_device.o                 84               708
     usbd_cdc_if.o                68        8    2'064
     usbd_desc.o                 256       37      592
     -------------------------------------------------
     Total:                      408       45    3'364
 
-C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target: [4]
+C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target: [4]
     usbd_conf.o                 498             1'272
     -------------------------------------------------
     Total:                      498             1'272
 
-C:\stm32_test\First\EWARM\First\Obj\Drivers\CMSIS: [5]
+C:\stm32\First\EWARM\First\Obj\Drivers\CMSIS: [5]
     system_stm32f1xx.o           20       10        4
     -------------------------------------------------
     Total:                       20       10        4
 
-C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver: [6]
+C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver: [6]
     stm32f1xx_hal.o             128        5       12
     stm32f1xx_hal_cortex.o      196
     stm32f1xx_hal_dma.o         256
@@ -311,7 +311,7 @@ C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver: [6]
     -------------------------------------------------
     Total:                    9'256        5       12
 
-C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library: [7]
+C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library: [7]
     usbd_cdc.o                  668      128      272
     usbd_core.o                 636
     usbd_ctlreq.o             1'118                 1
@@ -717,13 +717,13 @@ uwTickFreq              0x2000'0038    0x1  Data  Gb  stm32f1xx_hal.o [6]
 uwTickPrio              0x2000'0040    0x4  Data  Gb  stm32f1xx_hal.o [6]
 
 
-[1] = C:\stm32_test\First\EWARM\First\Obj\Application\EWARM
-[2] = C:\stm32_test\First\EWARM\First\Obj\Application\User\Core
-[3] = C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\App
-[4] = C:\stm32_test\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target
-[5] = C:\stm32_test\First\EWARM\First\Obj\Drivers\CMSIS
-[6] = C:\stm32_test\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver
-[7] = C:\stm32_test\First\EWARM\First\Obj\Middlewares\USB_Device_Library
+[1] = C:\stm32\First\EWARM\First\Obj\Application\EWARM
+[2] = C:\stm32\First\EWARM\First\Obj\Application\User\Core
+[3] = C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\App
+[4] = C:\stm32\First\EWARM\First\Obj\Application\User\USB_DEVICE\Target
+[5] = C:\stm32\First\EWARM\First\Obj\Drivers\CMSIS
+[6] = C:\stm32\First\EWARM\First\Obj\Drivers\STM32F1xx_HAL_Driver
+[7] = C:\stm32\First\EWARM\First\Obj\Middlewares\USB_Device_Library
 [8] = dl7M_tlf.a
 [9] = m7M_tl.a
 [10] = rt7M_tl.a

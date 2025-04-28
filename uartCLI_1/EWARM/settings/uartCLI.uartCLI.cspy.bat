@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\uartCLI_1\EWARM\settings\uartCLI.uartCLI.general.xcl" --backend -f "C:\stm32_test\uartCLI_1\EWARM\settings\uartCLI.uartCLI.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\uartCLI_1\EWARM\settings\uartCLI.uartCLI.general.xcl" --backend -f "C:\stm32\uartCLI_1\EWARM\settings\uartCLI.uartCLI.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\uartCLI_1\EWARM\settings\uartCLI.uartCLI.general.xcl" "--debug_file=%~1" --backend -f "C:\stm32_test\uartCLI_1\EWARM\settings\uartCLI.uartCLI.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\uartCLI_1\EWARM\settings\uartCLI.uartCLI.general.xcl" "--debug_file=%~1" --backend -f "C:\stm32\uartCLI_1\EWARM\settings\uartCLI.uartCLI.driver.xcl" 
 
 @echo off 
 :end

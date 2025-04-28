@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\First\EWARM\settings\First.First.general.xcl" --backend -f "C:\stm32_test\First\EWARM\settings\First.First.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\First\EWARM\settings\First.First.general.xcl" --backend -f "C:\stm32\First\EWARM\settings\First.First.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\First\EWARM\settings\First.First.general.xcl" "--debug_file=%~1" --backend -f "C:\stm32_test\First\EWARM\settings\First.First.driver.xcl" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\First\EWARM\settings\First.First.general.xcl" "--debug_file=%~1" --backend -f "C:\stm32\First\EWARM\settings\First.First.driver.xcl" 
 
 @echo off 
 :end

@@ -2,7 +2,7 @@
 
 "C:\Program Files\IAR Systems\Embedded Workbench 9.1\arm\bin\armSTLINK.dll" 
 
-"C:\stm32_test\First\EWARM\First\Exe\First.out" 
+"C:\stm32\First\EWARM\First\Exe\First.out" 
 
 --plugin="C:\Program Files\IAR Systems\Embedded Workbench 9.1\arm\bin\armbat.dll" 
 

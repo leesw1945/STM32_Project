@@ -1,8 +1,8 @@
-C:\stm32_test\First\EWARM\First\BrowseInfo\Middlewares\USB_Device_Library\usbd_ioreq.pbi: \
-  C:\stm32_test\First\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c \
-  C:\stm32_test\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
-  C:\stm32_test\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h \
-  C:\stm32_test\First\EWARM\..\USB_DEVICE\Target\usbd_conf.h \
+C:\stm32\First\EWARM\First\BrowseInfo\Middlewares\USB_Device_Library\usbd_ioreq.pbi: \
+  C:\stm32\First\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c \
+  C:\stm32\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
+  C:\stm32\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h \
+  C:\stm32\First\EWARM\..\USB_DEVICE\Target\usbd_conf.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\stdio.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\ycheck.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\yvals.h \
@@ -14,36 +14,36 @@ C:\stm32_test\First\EWARM\First\BrowseInfo\Middlewares\USB_Device_Library\usbd_i
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\DLib_Product_stdlib.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\string.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\DLib_Product_string.h \
-  C:\stm32_test\First\EWARM\..\Core\Inc\main.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h \
-  C:\stm32_test\First\EWARM\..\Core\Inc\stm32f1xx_hal_conf.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103x6.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Include\core_cm3.h \
+  C:\stm32\First\EWARM\..\Core\Inc\main.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h \
+  C:\stm32\First\EWARM\..\Core\Inc\stm32f1xx_hal_conf.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103x6.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Include\core_cm3.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\stdint.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Include\cmsis_version.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Include\cmsis_compiler.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Include\cmsis_iccarm.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Include\cmsis_version.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Include\cmsis_iccarm.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\aarch32\iccarm_builtin.h \
-  C:\stm32_test\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
+  C:\stm32\First\EWARM\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.1\arm\inc\c\stddef.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_gpio.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_gpio_ex.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_exti.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_dma.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_dma_ex.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_cortex.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_flash.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_flash_ex.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pwr.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_uart.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h \
-  C:\stm32_test\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h \
-  C:\stm32_test\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h \
-  C:\stm32_test\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
-  C:\stm32_test\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_gpio.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_gpio_ex.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_exti.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_dma.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_dma_ex.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_cortex.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_flash.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_flash_ex.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pwr.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_uart.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h \
+  C:\stm32\First\EWARM\..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h \
+  C:\stm32\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h \
+  C:\stm32\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
+  C:\stm32\First\EWARM\..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h

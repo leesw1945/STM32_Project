@@ -2,7 +2,7 @@
 
 "C:\Program Files\IAR Systems\Embedded Workbench 9.1\arm\bin\armSTLINK.dll" 
 
-"C:\stm32_test\uartCLI_1\EWARM\uartCLI\Exe\uartCLI.out" 
+"C:\stm32\uartCLI_1\EWARM\uartCLI\Exe\uartCLI.out" 
 
 --plugin="C:\Program Files\IAR Systems\Embedded Workbench 9.1\arm\bin\armbat.dll" 
 

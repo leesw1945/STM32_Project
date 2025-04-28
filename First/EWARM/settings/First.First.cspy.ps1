@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\First\EWARM\settings\First.First.general.xcl" --backend -f "C:\stm32_test\First\EWARM\settings\First.First.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\First\EWARM\settings\First.First.general.xcl" --backend -f "C:\stm32\First\EWARM\settings\First.First.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\First\EWARM\settings\First.First.general.xcl" --debug_file=$debugfile --backend -f "C:\stm32_test\First\EWARM\settings\First.First.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\First\EWARM\settings\First.First.general.xcl" --debug_file=$debugfile --backend -f "C:\stm32\First\EWARM\settings\First.First.driver.xcl" 
 }
