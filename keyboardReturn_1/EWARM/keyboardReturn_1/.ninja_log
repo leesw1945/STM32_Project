@@ -1,0 +1,22 @@
+# ninja log v5
+1	261	7676080447954597	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/EWARM/startup_stm32f103x6.o	36ea306b9baeb964
+231	697	7676080453313544	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/User/Core/stm32f1xx_hal_msp.o	3da8feb7aaf44fdf
+252	726	7676080453609614	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_cortex.o	35213fa6b539e294
+255	737	7676080453599646	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal.o	d35b2dabc4aaa7d8
+263	802	7676080454211686	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_exti.o	4dcb8f64ef5520ab
+221	826	7676080454504839	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/User/Core/usart.o	d2de1dd11334e95f
+106	836	7676080454457059	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/User/Core/gpio.o	a7a24d89d048e874
+213	851	7676080454634955	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/User/Core/stm32f1xx_it.o	e2e061a0921ed3f9
+248	872	7676080454900412	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_dma.o	e9a61e46ba876456
+235	924	7676080455513620	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/CMSIS/system_stm32f1xx.o	6db217ac701a21c6
+707	941	7676080455754269	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_rcc_ex.o	7c877ff709b135cc
+732	992	7676080456313619	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_gpio.o	786eff8c186afd56
+241	1000	7676080456336397	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_flash.o	757989b6db746eec
+843	1023	7676080456594708	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_gpio_ex.o	e37455d1af54cff8
+808	1043	7676080456781937	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_pwr.o	164ddfdde6b0e1d7
+832	1098	7676080457372822	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_flash_ex.o	245dce16f13b8f89
+746	1110	7676080457414857	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_rcc.o	b85b4c44ee2a04
+855	1532	7676080461669161	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Drivers/STM32F1xx_HAL_Driver/stm32f1xx_hal_uart.o	d6ffcf0c542606cd
+1	144	7676081524281934	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Obj/Application/User/Core/main.o	3605770fadfe060c
+148	313	7676081525983137	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Exe/keyboardReturn_1.out	cb6ee54fcdc60d5a
+324	372	7676081526656569	C:/stm32/keyboardReturn_1/EWARM/keyboardReturn_1/Exe/keyboardReturn_1.hex	354e246ff6aa390b
