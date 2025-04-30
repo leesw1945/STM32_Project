@@ -57,7 +57,7 @@ typedef struct {
 /* USER CODE BEGIN PD */
 
 #define DEBOUNCE_TIME 40 // 채터링 방지 시간 (ms)
-#define HOLD_CHECK 1000 // 1초 이상 누르고 있으면 HOLD
+#define HOLD_CHECK 500 // 1초 이상 누르고 있으면 HOLD
 
 /* USER CODE END PD */
 
@@ -74,7 +74,8 @@ typedef struct {
 uint8_t last_key_value = 0; // 새로운 키 값을 비교하여 바꼈는지 같은 키가 눌린 건지 확인
 KeyState current_key_state = KEY_IDLE; // 현재 키의 상태
 uint32_t last_key_time = 0; // 채터링 방지 40ms 지났는지 확인용
-uint16_t push_tick = 0; // 채터링 확인용 1바이트 보다 2바이트가 안전해보임
+//uint16_t push_tick = 0;
+uint8_t hold_key_sent = 0; // HOLD 상태에서 키가 전송 되었는지 확인
 
 // 키 큐
 //KeyQueue_t rx_queue = {0};
@@ -148,59 +149,111 @@ char DequeueKey(KeyQueue_t* queue) {
 */
 /*
 void ProcessKey(uint8_t key_value) {
+
+uint8_t current_tick = HAL_GetTick();
+
+// 채터링 방지 및 키 상태 처리
+if ((key_value != last_key_value) && (current_tick - last_key_time >= DEBOUNCE_TIME)) {
+
+last_key_value = key_value;
+last_key_time = current_tick;
+
+// 키 상태가 변했고 IDLE 이거나 FINISH 상태면 현재 키 상태를 누름 상태로 변경
+if (current_key_state == KEY_IDLE || current_key_state == KEY_FINISH) {
+
+current_key_state = KEY_PUSH;
+EnqueueKey(&tx_queue, key_value);
+
+            } else {
+
+current_key_state = KEY_FINISH;
+EnqueueKey(&tx_queue, key_value);
+
+            }
+
+    } else {
+
+if (current_tick - last_key_time >= DEBOUNCE_TIME) {
+
+if (current_tick - last_key_time >= HOLD_CHECK) {
+
+if (current_key_state == KEY_PUSH) {
+
+current_key_state = KEY_HOLD;
+EnqueueKey(&tx_queue, key_value);
+
+                }
+            }
+
+        }
+
+    }
+
+// 수신된 키 값을 수신 큐에 저장
+EnqueueKey(&rx_queue, key_value);
+
+}
+*/
+
+
+void ProcessKey(uint8_t key_value) {
     
-    uint8_t current_tick = HAL_GetTick();
+    uint32_t current_tick = HAL_GetTick();
     
-    // 채터링 방지 및 키 상태 처리
-    if ((key_value != last_key_value) && (current_tick - last_key_time >= DEBOUNCE_TIME)) {
+    // 입력된 값이 기존 값과 다르고 입력이 들어온지 40ms가 지났을 경우
+    if ((key_value != last_key_value) && (current_tick - last_key_time > DEBOUNCE_TIME)) {
         
-        last_key_value = key_value;
         last_key_time = current_tick;
+        last_key_value = key_value;
+        
+        if (key_value != last_key_value) {
             
-            // 키 상태가 변했고 IDLE 이거나 FINISH 상태면 현재 키 상태를 누름 상태로 변경
             if (current_key_state == KEY_IDLE || current_key_state == KEY_FINISH) {
                 
                 current_key_state = KEY_PUSH;
                 EnqueueKey(&tx_queue, key_value);
                 
-            } else {
+            } 
+            
+            // HOLD 상태에서 새 키가 눌리면 HOLD 상태 초기화
+            hold_key_sent = 0;
+            
+        } else if () {
+            
+            if (current_key_state == KEY_PUSH || current_key_state == KEY_HOLD) {
                 
                 current_key_state = KEY_FINISH;
-                EnqueueKey(&tx_queue, key_value);
+                hold_key_sent = 0; // 키가 떼어지면 다음 상태를 위해 초기화
                 
             }
+            
+        }
         
     } else {
         
-        if (current_tick - last_key_time >= DEBOUNCE_TIME) {
+        // 같은 키가 계속 눌리는 경우
+        if (key_value != 0 && current_key_state == KEY_PUSH) {
             
+            // HOLD 시간 초과 확인
             if (current_tick - last_key_time >= HOLD_CHECK) {
                 
-                if (current_key_state == KEY_PUSH) {
+                current_key_state = KEY_HOLD;
+                
+                // HOLD 상태에서 키를 한 번만 전송
+                if (hold_key_sent == 0) {
                     
-                    current_key_state = KEY_HOLD;
                     EnqueueKey(&tx_queue, key_value);
+                    hold_key_sent = 1; // 이미 전송됨을 표시
                     
                 }
+                
             }
             
         }
         
     }
-    
-    // 수신된 키 값을 수신 큐에 저장
-    EnqueueKey(&rx_queue, key_value);
-    
 }
-*/
 
-void ProcessKey(uint8_t key_value) {
-    
-    uint8_t current_tick = HAL_GetTick();
-    
-    if ((key_value != current_key_state) && 
-    
-}
 
 
 /*
@@ -230,7 +283,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     
     if (huart->Instance == USART1) {
         
-        push_tick = HAL_GetTick();
+        //push_tick = HAL_GetTick();
         // 수신된 키 값 처리
         ProcessKey(rx_data);
         
