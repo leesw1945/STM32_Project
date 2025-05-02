@@ -20,6 +20,8 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
+#include "stdio.h"
+#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -57,7 +59,9 @@ typedef struct {
 /* USER CODE BEGIN PD */
 
 #define DEBOUNCE_TIME 40 // 채터링 방지 시간 (ms)
-#define HOLD_CHECK 500 // 1초 이상 누르고 있으면 HOLD
+#define HOLD_CHECK 600 // 0.6초 이상 누르고 있으면 HOLD
+#define FINISH_CHECK 1000 // 1초 이상 입력 없으면 FINISH
+//#define PUSH_CHECK 30
 
 /* USER CODE END PD */
 
@@ -84,6 +88,9 @@ KeyQueue_t tx_queue = {0};
 // uart 수신/송신
 uint8_t rx_data = 0;
 volatile uint8_t uart_tx_ready = 1;
+
+char msg[32];
+//uint8_t key_value = 0;
 
 
 /* USER CODE END PV */
@@ -195,61 +202,159 @@ EnqueueKey(&rx_queue, key_value);
 }
 */
 
+/*
+void ProcessKey(uint8_t key_value) {
+    
+    uint32_t current_tick = HAL_GetTick();
+    
+    // 30ms 마다 동일한 값이 들어오면 리턴
+    if (key_value == last_key_value && current_tick - last_key_time < DEBOUNCE_TIME) {
+        
+        return;
+        
+    }
+    
+    // 입력된 값이 기존 값과 다르고 입력이 들어온지 40ms가 지났을 경우
+    if ((key_value != last_key_value) && (current_tick - last_key_time >= DEBOUNCE_TIME)) {
+        
+        last_key_time = current_tick;
+        last_key_value = key_value;
+        
+        //if (key_value != 0) {
+            if ((current_key_state == KEY_IDLE || current_key_state == KEY_FINISH) && 
+                current_tick - last_key_time < HOLD_CHECK) {
+                    
+                    current_key_state = KEY_PUSH;
+                    hold_key_sent = 0;
+                    EnqueueKey(&tx_queue, key_value);
+                    
+                }
+            
+       * } else {
+            
+            if (current_key_state == KEY_PUSH || current_key_state == KEY_PUSH) {
+                
+                current_key_state = KEY_FINISH;
+                hold_key_sent = 0;
+                last_key_value = 0;
+                EnqueueKey(&tx_queue, 0);
+                
+            }
+        }*
+        
+      // HOLD 체크 (키가 계속 눌리고 있는지)
+    } else if (key_value == last_key_value && current_key_state == KEY_PUSH) {
+        
+        if (current_tick - last_key_time >= HOLD_CHECK && hold_key_sent == 0) {
+            
+            current_key_state = KEY_HOLD;
+            hold_key_sent = 1;
+            EnqueueKey(&tx_queue, key_value);
+            
+        }
+        
+      // FINISH 처리
+    } else if ((key_value != last_key_value && current_key_state == KEY_HOLD) || 
+               current_key_state - last_key_time >= FINISH_CHECK) {
+                   
+                   current_key_state = KEY_FINISH;
+                   hold_key_sent = 0;
+                   last_key_value = 0;
+                   
+               }
+}
+*/
+
+/*
+void ProcessKey1(uint8_t key_value) {
+    uint32_t now = HAL_GetTick();
+
+    // 같은 키가 너무 빨리 반복될 경우 무시 (디바운싱 + 키 반복 차단)
+    if (key_value == last_key_value && now - last_key_time < DEBOUNCE_TIME) {
+        return;
+    }
+
+    // 새로운 키가 들어온 경우
+    if (key_value != last_key_value) {
+        last_key_value = key_value;
+        last_key_time = now;
+        current_key_state = KEY_PUSH;
+        hold_key_sent = 0;
+        EnqueueKey(&tx_queue, key_value);  // PUSH 상태
+        return;
+    }
+
+    // 같은 키가 계속 눌리고 있고, HOLD 전환 시간 도달한 경우
+    if (key_value == last_key_value && current_key_state == KEY_PUSH) {
+        if ((now - last_key_time) >= HOLD_CHECK && hold_key_sent == 0) {
+            current_key_state = KEY_HOLD;
+            hold_key_sent = 1;
+            EnqueueKey(&tx_queue, key_value);  // HOLD 상태
+        }
+        return;
+    }
+
+    // 키가 떼어진 경우 (다음 키가 들어오기 전까지)
+    if ((key_value == 0 || key_value != last_key_value) && current_key_state == KEY_HOLD) {
+        if ((now - last_key_time) >= FINISH_CHECK) {
+            current_key_state = KEY_FINISH;
+            last_key_value = 0;
+            hold_key_sent = 0;
+        }
+    }
+}
+*/
+
+/*
+* Description : 수신된 키 값을 처리하는 함수 / 채터링 처리
+* Param       : key_state 수신된 키 값
+* return      : void
+*/
 
 void ProcessKey(uint8_t key_value) {
     
     uint32_t current_tick = HAL_GetTick();
     
-    // 입력된 값이 기존 값과 다르고 입력이 들어온지 40ms가 지났을 경우
-    if ((key_value != last_key_value) && (current_tick - last_key_time > DEBOUNCE_TIME)) {
+    // 40ms 마다 동일한 값이 들어오면 리턴
+    if (key_value == last_key_value && current_tick - last_key_time < DEBOUNCE_TIME) {
+        
+        return;
+        
+    }
+    
+    // 입력된 값이 기존 값과 다른 경우
+    if (key_value != last_key_value) {
         
         last_key_time = current_tick;
         last_key_value = key_value;
         
-        if (key_value != last_key_value) {
+        current_key_state = KEY_PUSH;
+        hold_key_sent = 0;
+        EnqueueKey(&tx_queue, key_value);
+        
+      // PUSH인데 키 값이 기존 값과 같을 경우 출력
+    } else if (key_value == last_key_value && current_key_state == KEY_PUSH && current_tick - last_key_time > HOLD_CHECK ) {
+        
+        current_key_state = KEY_PUSH;
+        hold_key_sent = 0;
+        EnqueueKey(&tx_queue, key_value);
+        
+      // HOLD 체크 (키가 계속 눌리고 있는지)
+    } else if (key_value == last_key_value && current_key_state == KEY_PUSH) {
+        
+        if (current_tick - last_key_time <= HOLD_CHECK && hold_key_sent == 0) {
             
-            if (current_key_state == KEY_IDLE || current_key_state == KEY_FINISH) {
-                
-                current_key_state = KEY_PUSH;
-                EnqueueKey(&tx_queue, key_value);
-                
-            } 
+            current_key_state = KEY_HOLD;
+            hold_key_sent = 1;
+            EnqueueKey(&tx_queue, key_value);
             
-            // HOLD 상태에서 새 키가 눌리면 HOLD 상태 초기화
+        }
+        
+      // FINISH 처리
+    } else if (current_key_state == KEY_HOLD && (current_tick - last_key_time >= FINISH_CHECK)) {
+            
+            current_key_state = KEY_FINISH;
             hold_key_sent = 0;
-            
-        } else if () {
-            
-            if (current_key_state == KEY_PUSH || current_key_state == KEY_HOLD) {
-                
-                current_key_state = KEY_FINISH;
-                hold_key_sent = 0; // 키가 떼어지면 다음 상태를 위해 초기화
-                
-            }
-            
-        }
-        
-    } else {
-        
-        // 같은 키가 계속 눌리는 경우
-        if (key_value != 0 && current_key_state == KEY_PUSH) {
-            
-            // HOLD 시간 초과 확인
-            if (current_tick - last_key_time >= HOLD_CHECK) {
-                
-                current_key_state = KEY_HOLD;
-                
-                // HOLD 상태에서 키를 한 번만 전송
-                if (hold_key_sent == 0) {
-                    
-                    EnqueueKey(&tx_queue, key_value);
-                    hold_key_sent = 1; // 이미 전송됨을 표시
-                    
-                }
-                
-            }
-            
-        }
         
     }
 }
@@ -265,11 +370,34 @@ void SendNextKey(void) {
     
     if (tx_queue.count > 0) {
         
+        
         char key = DequeueKey(&tx_queue);
         uart_tx_ready = 0; // UART 전송이 끝나면 다음 키 전송 플래그 변수
-        HAL_UART_Transmit_IT(&huart1, (uint8_t*)&key, 1);
         
-    }
+        //char msg[32];
+        
+        if (current_key_state == KEY_PUSH) {
+            
+            snprintf(msg, sizeof(msg), "PUSH: %c\r\n", key);
+            
+        } else if (current_key_state == KEY_HOLD) {
+            
+            snprintf(msg, sizeof(msg), "HOLD: %c\r\n", key);
+            
+        } else if (current_key_state == KEY_FINISH) {
+            
+            snprintf(msg, sizeof(msg), "FINISH: %c\r\n", key);
+        
+        } else {
+
+            snprintf(msg, sizeof(msg), "KEY: %c\r\n", key);
+            
+        }
+            
+        HAL_UART_Transmit_IT(&huart1, (uint8_t*)msg, strlen(msg));
+        
+
+    } 
     
 }
 
