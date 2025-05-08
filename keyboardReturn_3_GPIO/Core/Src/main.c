@@ -50,6 +50,11 @@ typedef struct {
 }KeyInfo_t;
 
 #define MAX_KEYS 16
+#define DEBOUNCE_TIME 40
+#define HOLD_TIME 500
+#define KEY_QUEUE_SIZE 32
+
+// KeyInfo_t 구조체 16개 공간을 만듬
 KeyInfo_t keys[MAX_KEYS]; // 전체 키 상태 저장
 
 const char keymap[4][4] = {
@@ -60,6 +65,15 @@ const char keymap[4][4] = {
     {'*', '0', '#', 'D'}
     
 };
+
+// GPIO_PIN_0은 HAL 라이브러리에 이미 정의 되있음
+// #define GPIO_PIN_0    ((uint16_t)0x0001)  // 0번 핀
+// GPIO는 16개씩 핀을 가지고 있음 그래서 uint16_t으로 사용함
+// GPIO 제어는 보통 하나의 레지스터로 여러 핀을 동시에 제어함
+// 그래서 각 핀을 비트 단위로 표현해서 제어함
+uint16_t row_pins[4] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
+uint16_t col_pins[4] = {GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6, GPIO_PIN_7};
+
 
 /* USER CODE END PTD */
 
@@ -83,6 +97,8 @@ const char keymap[4][4] = {
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
+/*
+// 16키패드 모듈 테스트
 char ScanKeypad(void) {
     for (int row = 0; row < 4; row++) {
         
@@ -106,6 +122,7 @@ char ScanKeypad(void) {
     }
     return 0;
 }
+*/
 
 /* USER CODE END PFP */
 
@@ -155,6 +172,9 @@ int main(void)
         /* USER CODE END WHILE */
         
         /* USER CODE BEGIN 3 */
+        
+        /*
+        // 16키패드 모듈 테스트
         char key = ScanKeypad();
         if (key) {
             char msg[20];
@@ -162,6 +182,7 @@ int main(void)
             HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), 100);
             HAL_Delay(200); // 반복 방지
         }
+        */
     }
     /* USER CODE END 3 */
 }
