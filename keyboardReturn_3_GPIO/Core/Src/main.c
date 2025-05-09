@@ -42,20 +42,30 @@ typedef enum {
 
 typedef struct {
     
-    char key_char;
-    KeyState_t state;
-    uint32_t hold_time;
-    uint8_t active;
+    char key_char; // 키 값
+    KeyState_t state; // 현재 상태 (PUSH, HOLD)
+    uint32_t tick; // 누르기 시작한 시간
+    uint8_t active; // 현재 눌려있는지 여부
     
 }KeyInfo_t;
 
 #define MAX_KEYS 16
-#define DEBOUNCE_TIME 40
+#define DEBOUNCE_TIME 40 
 #define HOLD_TIME 500
 #define KEY_QUEUE_SIZE 32
 
+typedef struct {
+    
+    char buffer[KEY_QUEUE_SIZE];
+    uint8_t fidx;
+    uint8_t ridx;
+    uint8_t count;
+    
+} KeyQueue_t;
+
+KeyQueue_t tx_queue = {0};
 // KeyInfo_t 구조체 16개 공간을 만듬
-KeyInfo_t keys[MAX_KEYS]; // 전체 키 상태 저장
+KeyInfo_t keys[MAX_KEYS] = {0}; // 전체 키 상태 저장
 
 const char keymap[4][4] = {
     
@@ -73,6 +83,8 @@ const char keymap[4][4] = {
 // 그래서 각 핀을 비트 단위로 표현해서 제어함
 uint16_t row_pins[4] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
 uint16_t col_pins[4] = {GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6, GPIO_PIN_7};
+
+uint8_t uart_tx_ready = 1;
 
 
 /* USER CODE END PTD */
@@ -124,6 +136,141 @@ char ScanKeypad(void) {
 }
 */
 
+// 큐에 키 값 추가
+void EnqueueKey(KeyQueue_t *q, char key) {
+    
+    if (q->count < KEY_QUEUE_SIZE) {
+        
+        q->buffer[q->ridx++] = key;
+        q->ridx %= KEY_QUEUE_SIZE;  // 오버플로우 방지
+        q->count++;
+        
+    }
+    
+}
+
+// 큐에서 값 꺼냄
+char DequeueKey(KeyQueue_t *q) {
+    
+    if (q->count == 0) return 0;
+    char key = q->buffer[q->fidx++];
+    q->fidx %= KEY_QUEUE_SIZE; 
+    q->count--;
+    return key;
+    
+}
+
+// 키 상태 업데이트
+void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
+    
+    KeyInfo_t *k = &keys[key_index];  // 해당 키에 대한  포인터
+    
+    if (pressed) {  // 키가 눌려 있을 경우
+        
+        if (!k->active) {
+            
+            k->active = 1;
+            k->tick = tick;
+            k->state = KEY_PUSH;
+            EnqueueKey(&tx_queue, k->key_char);
+            
+        } else if (k->state == KEY_PUSH && (tick - k->tick) >= HOLD_TIME) {
+            
+            k->state = KEY_HOLD;
+            EnqueueKey(&tx_queue, k->key_char);
+            
+        }
+        
+    } else { // 키가 떨어져 있을 경우
+        
+        if (k->active && (tick - k->tick) >= DEBOUNCE_TIME) {
+            
+            k->active = 0;
+            k->state = KEY_FINISH;
+            EnqueueKey(&tx_queue, k->key_char);
+            
+        } else {
+            
+            k->state = KEY_IDLE;
+            
+        }
+        
+    }
+    
+}
+
+// 키패드 스캔 함수
+void ScanKeypad() {
+    
+    uint32_t now = HAL_GetTick();  // 외부 인터럽트로 ScanKeypad() 호출 시점의 시간
+    
+    for (int row = 0; row < 4; row++) {
+        
+        
+        for (int r = 0; r < 4; r++) {
+            
+            // 모든 행을 일단 HIGH로 설정
+            HAL_GPIO_WritePin(GPIOA, row_pins[r], GPIO_PIN_SET);
+            
+        }
+        
+        // 한 행씩 LOW로 설정 / COL에서 LOW값을 받아서  행열 모두 LOW인 값 찾기 위해
+        HAL_GPIO_WritePin(GPIOA, row_pins[row], GPIO_PIN_RESET);
+        
+        for (int col = 0; col < 4; col++) {
+            
+            uint8_t key_down = (HAL_GPIO_ReadPin(GPIOA, col_pins[col]) == GPIO_PIN_RESET);
+            
+            /*
+                        Col0  Col1  Col2  Col3
+                       +-----+-----+-----+-----+
+                Row0   |  0  |  1  |  2  |  3  |
+                Row1   |  4  |  5  |  6  |  7  |
+                Row2   |  8  |  9  | 10  | 11  |
+                Row3   | 12  | 13  | 14  | 15  |
+            */
+            // 2차원 배열이지만 인덱스 부여 가능
+            // 아래 공식으로 인덱스 계산 가능
+            // RTOS에서도 테이블 기반 스케줄링, 이벤트 맵 등을 이런 식으로 계산
+            // 하드웨어 제어에서도 레지스터 배열 접근 시 row-major(행 기준 순서) 접근 방식이 매우 유용
+            uint8_t key_index = row * 4 + col;  // 키 인덱스 계산
+            
+            keys[key_index].key_char = keymap[row][col];  // 문자 매핑
+            UpdateKeyState(key_index, key_down, now);  // 상태 업데이트
+
+        }
+        
+    }
+    
+}
+
+// 키 값 UART 전송
+void SendNextkey(void) {
+    
+    if (tx_queue.count > 0 && uart_tx_ready) {           
+        char key = DequeueKey(&tx_queue);                
+        char msg[32];
+        uart_tx_ready = 0;  
+        snprintf(msg, sizeof(msg), "KEY: %c\r\n", key);
+        HAL_UART_Transmit_IT(&huart1, (uint8_t*)msg, strlen(msg));  
+    }
+    
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    for (int col = 0; col < 4; col++) {
+        if (GPIO_Pin == col_pins[col]) {                  // 어떤 Col 핀에서 인터럽트 발생했는지 확인
+            ScanKeypad();                                // 키패드 스캔 수행
+        }
+    }
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+        uart_tx_ready = 1;                               // 다음 전송 가능 상태로 설정
+    }
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -163,6 +310,10 @@ int main(void)
     MX_USART1_UART_Init();
     /* USER CODE BEGIN 2 */
     
+    for (int i = 0; i < 4; i++) {
+    HAL_GPIO_WritePin(GPIOA, row_pins[i], GPIO_PIN_SET);  // 시작 시 모든 Row를 HIGH로 설정
+}
+    
     /* USER CODE END 2 */
     
     /* Infinite loop */
@@ -183,6 +334,8 @@ int main(void)
             HAL_Delay(200); // 반복 방지
         }
         */
+        
+        SendNextkey();
     }
     /* USER CODE END 3 */
 }
