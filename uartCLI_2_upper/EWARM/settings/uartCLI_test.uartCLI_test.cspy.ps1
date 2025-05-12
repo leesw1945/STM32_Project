@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.general.xcl" --backend -f "C:\stm32_test\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.general.xcl" --backend -f "C:\stm32\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32_test\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.general.xcl" --debug_file=$debugfile --backend -f "C:\stm32_test\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.1\common\bin\cspybat" -f "C:\stm32\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.general.xcl" --debug_file=$debugfile --backend -f "C:\stm32\uartCLI_2_upper\EWARM\settings\uartCLI_test.uartCLI_test.driver.xcl" 
 }

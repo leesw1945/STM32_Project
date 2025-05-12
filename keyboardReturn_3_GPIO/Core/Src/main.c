@@ -20,11 +20,12 @@
 #include "main.h"
 #include "usart.h"
 #include "gpio.h"
-#include "stdio.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -53,10 +54,11 @@ typedef struct {
 #define DEBOUNCE_TIME 40 
 #define HOLD_TIME 500
 #define KEY_QUEUE_SIZE 32
+#define MAX_MSG_LEN 32
 
 typedef struct {
     
-    char buffer[KEY_QUEUE_SIZE];
+    char buffer[KEY_QUEUE_SIZE][MAX_MSG_LEN];
     uint8_t fidx;
     uint8_t ridx;
     uint8_t count;
@@ -136,6 +138,7 @@ char ScanKeypad(void) {
 }
 */
 
+/*
 // 큐에 키 값 추가
 void EnqueueKey(KeyQueue_t *q, char key) {
     
@@ -159,6 +162,26 @@ char DequeueKey(KeyQueue_t *q) {
     return key;
     
 }
+*/
+
+// 메시지를 큐에 넣는 함수
+void EnqueueMessage(const char *msg) {
+    if (tx_queue.count < KEY_QUEUE_SIZE) {
+        strncpy(tx_queue.buffer[tx_queue.ridx], msg, MAX_MSG_LEN - 1);
+        tx_queue.buffer[tx_queue.ridx][MAX_MSG_LEN - 1] = '\0'; // NULL 종료 보장
+        tx_queue.ridx = (tx_queue.ridx + 1) % KEY_QUEUE_SIZE;
+        tx_queue.count++;
+    }
+}
+
+// 큐에서 메시지를 꺼내는 함수
+char* DequeueMessage(void) {
+    if (tx_queue.count == 0) return NULL;
+    char* msg = tx_queue.buffer[tx_queue.fidx];
+    tx_queue.fidx = (tx_queue.fidx + 1) % KEY_QUEUE_SIZE;
+    tx_queue.count--;
+    return msg;
+}
 
 // 키 상태 업데이트
 void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
@@ -167,17 +190,25 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
     
     if (pressed) {  // 키가 눌려 있을 경우
         
-        if (!k->active) {
+        if (!k->active && (tick - k->tick >= DEBOUNCE_TIME)) {
             
             k->active = 1;
             k->tick = tick;
             k->state = KEY_PUSH;
-            EnqueueKey(&tx_queue, k->key_char);
+            //EnqueueKey(&tx_queue, k->key_char);
             
-        } else if (k->state == KEY_PUSH && (tick - k->tick) >= HOLD_TIME) {
+            char msg[32];
+            snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
+            EnqueueMessage(msg);
+            
+        } else if (k->active && k->state == KEY_PUSH && (tick - k->tick) >= HOLD_TIME) {
             
             k->state = KEY_HOLD;
-            EnqueueKey(&tx_queue, k->key_char);
+            //EnqueueKey(&tx_queue, k->key_char);
+            
+            char msg[32];
+            snprintf(msg, sizeof(msg), "KEY: %c, STATE: HOLD\r\n", k->key_char);
+            EnqueueMessage(msg);
             
         }
         
@@ -186,8 +217,15 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
         if (k->active && (tick - k->tick) >= DEBOUNCE_TIME) {
             
             k->active = 0;
+            if (k->state != KEY_IDLE) {
             k->state = KEY_FINISH;
-            EnqueueKey(&tx_queue, k->key_char);
+            //EnqueueKey(&tx_queue, k->key_char);
+            
+            char msg[32];
+            snprintf(msg, sizeof(msg), "KEY: %c, STATE: FINISH\r\n", k->key_char);
+            EnqueueMessage(msg);
+            
+            }
             
         } else {
             
@@ -219,6 +257,7 @@ void ScanKeypad() {
         
         for (int col = 0; col < 4; col++) {
             
+            // 키가 눌렸을 경우 key_down에 1 대입
             uint8_t key_down = (HAL_GPIO_ReadPin(GPIOA, col_pins[col]) == GPIO_PIN_RESET);
             
             /*
@@ -245,13 +284,14 @@ void ScanKeypad() {
 }
 
 // 키 값 UART 전송
-void SendNextkey(void) {
+void SendNextMessage(void) {
     
     if (tx_queue.count > 0 && uart_tx_ready) {           
-        char key = DequeueKey(&tx_queue);                
-        char msg[32];
+        //char key = DequeueKey(&tx_queue);                
+        //char msg[32];
+        char *msg = DequeueMessage();
         uart_tx_ready = 0;  
-        snprintf(msg, sizeof(msg), "KEY: %c\r\n", key);
+        //snprintf(msg, sizeof(msg), "KEY: %c\r\n", key);
         HAL_UART_Transmit_IT(&huart1, (uint8_t*)msg, strlen(msg));  
     }
     
@@ -259,15 +299,16 @@ void SendNextkey(void) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     for (int col = 0; col < 4; col++) {
-        if (GPIO_Pin == col_pins[col]) {                  // 어떤 Col 핀에서 인터럽트 발생했는지 확인
-            ScanKeypad();                                // 키패드 스캔 수행
+        if (GPIO_Pin == col_pins[col]) {   // 어떤 Col 핀에서 인터럽트 발생했는지 확인
+            ScanKeypad();                  // 키패드 스캔 수행
+            break;
         }
     }
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
-        uart_tx_ready = 1;                               // 다음 전송 가능 상태로 설정
+        uart_tx_ready = 1;   // 다음 전송 가능 상태로 설정
     }
 }
 
@@ -279,50 +320,50 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 /* USER CODE END 0 */
 
 /**
-* @brief  The application entry point.
-* @retval int
-*/
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
+
+  /* USER CODE BEGIN 1 */
     
-    /* USER CODE BEGIN 1 */
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
     
-    /* USER CODE END 1 */
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
     
-    /* MCU Configuration--------------------------------------------------------*/
-    
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
-    
-    /* USER CODE BEGIN Init */
-    
-    /* USER CODE END Init */
-    
-    /* Configure the system clock */
-    SystemClock_Config();
-    
-    /* USER CODE BEGIN SysInit */
-    
-    /* USER CODE END SysInit */
-    
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_USART1_UART_Init();
-    /* USER CODE BEGIN 2 */
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_USART1_UART_Init();
+  /* USER CODE BEGIN 2 */
     
     for (int i = 0; i < 4; i++) {
     HAL_GPIO_WritePin(GPIOA, row_pins[i], GPIO_PIN_SET);  // 시작 시 모든 Row를 HIGH로 설정
 }
     
-    /* USER CODE END 2 */
-    
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
     while (1)
     {
-        /* USER CODE END WHILE */
-        
-        /* USER CODE BEGIN 3 */
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
         
         /*
         // 16키패드 모듈 테스트
@@ -335,48 +376,49 @@ int main(void)
         }
         */
         
-        SendNextkey();
+        ScanKeypad();
+        SendNextMessage();
     }
-    /* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
-* @brief System Clock Configuration
-* @retval None
-*/
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-    
-    /** Initializes the RCC Oscillators according to the specified parameters
-    * in the RCC_OscInitTypeDef structure.
-    */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-    {
-        Error_Handler();
-    }
-    
-    /** Initializes the CPU, AHB and APB buses clocks
-    */
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-        |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-    {
-        Error_Handler();
-    }
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
 
 /* USER CODE BEGIN 4 */
@@ -384,33 +426,33 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-* @brief  This function is executed in case of error occurrence.
-* @retval None
-*/
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
 void Error_Handler(void)
 {
-    /* USER CODE BEGIN Error_Handler_Debug */
+  /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
     __disable_irq();
     while (1)
     {
     }
-    /* USER CODE END Error_Handler_Debug */
+  /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
 /**
-* @brief  Reports the name of the source file and the source line number
-*         where the assert_param error has occurred.
-* @param  file: pointer to the source file name
-* @param  line: assert_param error line source number
-* @retval None
-*/
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-    /* USER CODE BEGIN 6 */
+  /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-    /* USER CODE END 6 */
+  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
