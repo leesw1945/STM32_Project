@@ -48,7 +48,7 @@ typedef struct {
     uint32_t tick; // 누르기 시작한 시간
     uint8_t active; // 현재 눌려있는지 여부
     
-}KeyInfo_t;
+} KeyInfo_t;
 
 #define MAX_KEYS 16
 #define DEBOUNCE_TIME 40 
@@ -87,7 +87,6 @@ uint16_t row_pins[4] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
 uint16_t col_pins[4] = {GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6, GPIO_PIN_7};
 
 uint8_t uart_tx_ready = 1;
-
 
 /* USER CODE END PTD */
 
@@ -188,9 +187,15 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
     
     KeyInfo_t *k = &keys[key_index];  // 해당 키에 대한  포인터
     
+    if (tick - k->tick < DEBOUNCE_TIME) {
+        
+        return;
+        
+    }
+    
     if (pressed) {  // 키가 눌려 있을 경우
         
-        if (!k->active && (tick - k->tick >= DEBOUNCE_TIME)) {
+        if (!k->active) {
             
             k->active = 1;
             k->tick = tick;
@@ -201,7 +206,7 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
             snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
             EnqueueMessage(msg);
             
-        } else if (k->active && k->state == KEY_PUSH && (tick - k->tick) >= HOLD_TIME) {
+        } else if (k->active && k->state == KEY_PUSH && (tick - k->tick) <= HOLD_TIME) {
             
             k->state = KEY_HOLD;
             //EnqueueKey(&tx_queue, k->key_char);
@@ -214,7 +219,7 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
         
     } else { // 키가 떨어져 있을 경우
         
-        if (k->active && (tick - k->tick) >= DEBOUNCE_TIME) {
+        if (k->active && (tick - k->tick) > HOLD_TIME) {
             
             k->active = 0;
             if (k->state != KEY_IDLE) {
@@ -376,7 +381,7 @@ int main(void)
         }
         */
         
-        ScanKeypad();
+        //ScanKeypad();
         SendNextMessage();
     }
   /* USER CODE END 3 */
