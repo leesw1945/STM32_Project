@@ -183,22 +183,17 @@ char* DequeueMessage(void) {
 }
 
 // 키 상태 업데이트
-void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
+void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t current_tick) {
     
     KeyInfo_t *k = &keys[key_index];  // 해당 키에 대한  포인터
     
-    if (tick - k->tick < DEBOUNCE_TIME) {
-        
-        return;
-        
-    }
     
     if (pressed) {  // 키가 눌려 있을 경우
         
         if (!k->active) {
             
             k->active = 1;
-            k->tick = tick;
+            k->tick = current_tick;
             k->state = KEY_PUSH;
             //EnqueueKey(&tx_queue, k->key_char);
             
@@ -206,7 +201,7 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
             snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
             EnqueueMessage(msg);
             
-        } else if (k->active && k->state == KEY_PUSH && (tick - k->tick) <= HOLD_TIME) {
+        } else if (k->active && k->state == KEY_PUSH && (current_tick - k->tick) <= HOLD_TIME) {
             
             k->state = KEY_HOLD;
             //EnqueueKey(&tx_queue, k->key_char);
@@ -219,7 +214,7 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t tick) {
         
     } else { // 키가 떨어져 있을 경우
         
-        if (k->active && (tick - k->tick) > HOLD_TIME) {
+        if (k->active && (current_tick - k->tick) > HOLD_TIME) {
             
             k->active = 0;
             if (k->state != KEY_IDLE) {
@@ -381,7 +376,7 @@ int main(void)
         }
         */
         
-        //ScanKeypad();
+        ScanKeypad();
         SendNextMessage();
     }
   /* USER CODE END 3 */
