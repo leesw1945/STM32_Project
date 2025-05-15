@@ -52,7 +52,7 @@ typedef struct {
 
 #define MAX_KEYS 16
 #define DEBOUNCE_TIME 40 
-#define HOLD_TIME 500
+#define HOLD_TIME 1000
 #define KEY_QUEUE_SIZE 32
 #define MAX_MSG_LEN 32
 
@@ -187,51 +187,67 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t current_tick) {
     
     KeyInfo_t *k = &keys[key_index];  // 해당 키에 대한  포인터
     
+    if (current_tick - k->tick < DEBOUNCE_TIME) {
+        
+        return;
+        
+    }
     
     if (pressed) {  // 키가 눌려 있을 경우
         
         if (!k->active) {
             
-            k->active = 1;
-            k->tick = current_tick;
-            k->state = KEY_PUSH;
-            //EnqueueKey(&tx_queue, k->key_char);
+            if (k->state == KEY_IDLE) {
+                
+                k->active = 1;
+                k->tick = current_tick;  
+                k->state = KEY_PUSH;  
+                
+                char msg[32];
+                snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
+                EnqueueMessage(msg);
+                
+            }
             
-            char msg[32];
-            snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
-            EnqueueMessage(msg);
+        } else if (k->active && k->state == KEY_PUSH) {
             
-        } else if (k->active && k->state == KEY_PUSH && (current_tick - k->tick) <= HOLD_TIME) {
+            uint32_t hold_current_tick = HAL_GetTick();
             
-            k->state = KEY_HOLD;
-            //EnqueueKey(&tx_queue, k->key_char);
-            
-            char msg[32];
-            snprintf(msg, sizeof(msg), "KEY: %c, STATE: HOLD\r\n", k->key_char);
-            EnqueueMessage(msg);
+            if (hold_current_tick - k->tick >= HOLD_TIME) {
+                
+                k->state = KEY_HOLD;
+                
+                char msg[32];
+                snprintf(msg, sizeof(msg), "KEY: %c, STATE: HOLD\r\n", k->key_char);
+                EnqueueMessage(msg);
+                
+            }
             
         }
         
     } else { // 키가 떨어져 있을 경우
         
-        if (k->active && (current_tick - k->tick) > HOLD_TIME) {
+        if (k->active) {
             
-            k->active = 0;
-            if (k->state != KEY_IDLE) {
-            k->state = KEY_FINISH;
-            //EnqueueKey(&tx_queue, k->key_char);
-            
-            char msg[32];
-            snprintf(msg, sizeof(msg), "KEY: %c, STATE: FINISH\r\n", k->key_char);
-            EnqueueMessage(msg);
-            
+            if (k->state == KEY_PUSH || k->state == KEY_HOLD) {
+                
+                k->active = 0;
+                k->tick = current_tick;
+                k->state = KEY_FINISH;
+                
+                char msg[32];
+                snprintf(msg, sizeof(msg), "KEY: %c, STATE: FINISH\r\n", k->key_char);
+                EnqueueMessage(msg);
+                
             }
             
-        } else {
+            if (k->state == KEY_FINISH) {
+                
+                k->state = KEY_IDLE;
+                
+            }
             
-            k->state = KEY_IDLE;
-            
-        }
+        } 
         
     }
     
@@ -240,7 +256,7 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t current_tick) {
 // 키패드 스캔 함수
 void ScanKeypad() {
     
-    uint32_t now = HAL_GetTick();  // 외부 인터럽트로 ScanKeypad() 호출 시점의 시간
+    uint32_t now = HAL_GetTick(); 
     
     for (int row = 0; row < 4; row++) {
         
@@ -297,14 +313,18 @@ void SendNextMessage(void) {
     
 }
 
+/*
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    
     for (int col = 0; col < 4; col++) {
         if (GPIO_Pin == col_pins[col]) {   // 어떤 Col 핀에서 인터럽트 발생했는지 확인
             ScanKeypad();                  // 키패드 스캔 수행
-            break;
+            //break;
         }
     }
+    
 }
+*/
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
@@ -350,10 +370,13 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-    
-    for (int i = 0; i < 4; i++) {
+  
+  for (int i = 0; i < 4; i++) {
     HAL_GPIO_WritePin(GPIOA, row_pins[i], GPIO_PIN_SET);  // 시작 시 모든 Row를 HIGH로 설정
 }
+    
+uint32_t last_scan_time = 0;
+
     
   /* USER CODE END 2 */
 
@@ -375,8 +398,13 @@ int main(void)
             HAL_Delay(200); // 반복 방지
         }
         */
+
+        uint32_t current_scan_time = HAL_GetTick();
+        if (current_scan_time - last_scan_time >= 50) {
+            ScanKeypad();
+            last_scan_time = current_scan_time;
+        }
         
-        ScanKeypad();
         SendNextMessage();
     }
   /* USER CODE END 3 */
