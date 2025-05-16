@@ -52,7 +52,7 @@ typedef struct {
 
 #define MAX_KEYS 16
 #define DEBOUNCE_TIME 40 
-#define HOLD_TIME 1000
+#define HOLD_TIME 500
 #define KEY_QUEUE_SIZE 32
 #define MAX_MSG_LEN 32
 
@@ -182,6 +182,87 @@ char* DequeueMessage(void) {
     return msg;
 }
 
+// 메시지 생성 함수
+void SendKeyStateMessage(char key_char, KeyState_t state) {
+    
+    char msg[MAX_MSG_LEN];
+    
+    // 문자열은 char*, const char* 으로 사용, 문자열이 배열이고 첫주소를 전달하기 때문
+    // 문자열은 읽기 전용 메모리에 저장 되기 때문에 직접 state_str[0] = "p"; 이런식으로 수정하면 안 됨.
+    // 그래서 런타임 전에 컴파일 에러를 발생해서 실수하지 않기 위해 const char* 사용
+    // state_str = "PPP"; 이런 식으로는 가능이라기 보단 새로운 메모리에 새 문자열을 넣는 거임
+    // 직접 수정하고 싶으면 버퍼를 사용해서 문자열을 복사한 후 수정해야함
+    
+    // 예시)
+    // 수정 가능한 버퍼 생성
+    // char buffer[100];
+    // strcpy(buffer, "Hello");  // 이제 buffer는 수정 가능
+    // buffer[0] = 'h';  // 허용됨
+    
+    // 문자열을 리턴하는 함수를 사용하고 싶을 경우도 버퍼를 사용
+    
+    // 예시)
+    /*
+    char* CreateKeyStateMessage(char key_char, KeyState_t key_state, char* buffer, size_t buffer_size) {
+    const char* state_str;
+    
+    switch (key_state) {
+    // 상태별 문자열 설정 (앞의 코드와 동일)
+}
+    
+    snprintf(buffer, buffer_size, "KEY: %c, STATE: %s\r\n", key_char, state_str);
+    return buffer; // 편의를 위해 같은 버퍼 포인터 반환
+}
+    
+    // 사용 예:
+    char buffer[32];
+    char* message = CreateKeyStateMessage('A', KEY_PUSH, buffer, sizeof(buffer));
+    EnqueueMessage(message); // buffer와 message는 동일한 포인터
+    
+    */
+    
+    const char* state_str;
+    
+    switch (state) {
+        
+    case KEY_IDLE:
+        
+        state_str = "IDEL";
+        
+        break;
+        
+    case KEY_PUSH:
+        
+        state_str = "PUSH";
+        
+        break;
+        
+    case KEY_HOLD:
+        
+        state_str = "HOLD";
+        
+        break;
+        
+    case KEY_FINISH:
+        
+        state_str = "FINISH";
+        
+        break;
+        
+    default:
+        
+        state_str = "IDEL";
+        
+        break;
+        
+    }
+    
+    snprintf(msg, sizeof(msg), "KEY: %c, STATE: %s\r\n", key_char, state_str);
+    EnqueueMessage(msg);
+    
+}
+
+
 // 키 상태 업데이트
 void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t current_tick) {
     
@@ -193,70 +274,86 @@ void UpdateKeyState(uint8_t key_index, uint8_t pressed, uint32_t current_tick) {
         
     }
     
-    if (pressed) {  // 키가 눌려 있을 경우
+    switch (k->state) {
         
-        if (!k->active) {
+    case KEY_IDLE:
+        
+        if (pressed && !k->active) {
             
-            if (k->state == KEY_IDLE) {
-                
-                k->active = 1;
-                k->tick = current_tick;  
-                k->state = KEY_PUSH;  
-                
-                char msg[32];
-                snprintf(msg, sizeof(msg), "KEY: %c, STATE: PUSH\r\n", k->key_char);
-                EnqueueMessage(msg);
-                
-            }
+            k->active = 1;
+            k->tick = current_tick;
+            k->state = KEY_PUSH;
             
-        } else if (k->active && k->state == KEY_PUSH) {
+            SendKeyStateMessage(k->key_char, KEY_PUSH);
+        }
+        
+        break;
+        
+    case KEY_PUSH:
+        
+        if (pressed && k->active) {
             
-            uint32_t hold_current_tick = HAL_GetTick();
+            // *기존 current_tick은 폴링 방식으로 계속 초기화 되기 때문에
+            // hold 체크할 tick을 따로 생성
+            uint32_t hold_current_tick = HAL_GetTick(); 
             
             if (hold_current_tick - k->tick >= HOLD_TIME) {
                 
                 k->state = KEY_HOLD;
                 
-                char msg[32];
-                snprintf(msg, sizeof(msg), "KEY: %c, STATE: HOLD\r\n", k->key_char);
-                EnqueueMessage(msg);
+                SendKeyStateMessage(k->key_char, KEY_HOLD);
                 
             }
+            
+        } else {
+            
+            k->active = 0;
+            k->tick = current_tick;
+            k->state = KEY_FINISH;
+            
+            SendKeyStateMessage(k->key_char, KEY_FINISH);
             
         }
         
-    } else { // 키가 떨어져 있을 경우
+        break;
         
-        if (k->active) {
+    case KEY_HOLD:
+        
+        if (!pressed && k->active) {
             
-            if (k->state == KEY_PUSH || k->state == KEY_HOLD) {
-                
-                k->active = 0;
-                k->tick = current_tick;
-                k->state = KEY_FINISH;
-                
-                char msg[32];
-                snprintf(msg, sizeof(msg), "KEY: %c, STATE: FINISH\r\n", k->key_char);
-                EnqueueMessage(msg);
-                
-            }
+            k->active = 0;
+            k->tick = current_tick;
+            k->state = KEY_FINISH;
             
-            if (k->state == KEY_FINISH) {
-                
-                k->state = KEY_IDLE;
-                
-            }
+            SendKeyStateMessage(k->key_char, KEY_FINISH);
             
-        } 
+        }
+        
+        break;
+        
+    case KEY_FINISH:
+        
+        k->state = KEY_IDLE;
+        
+        break;
+        
+    default:
+        
+        k->state = KEY_IDLE;
+        k->active = 0;
+        
+        break;
         
     }
     
 }
 
+
+
 // 키패드 스캔 함수
 void ScanKeypad() {
     
-    uint32_t now = HAL_GetTick(); 
+    uint32_t current_tick = HAL_GetTick(); 
     
     for (int row = 0; row < 4; row++) {
         
@@ -274,7 +371,7 @@ void ScanKeypad() {
         for (int col = 0; col < 4; col++) {
             
             // 키가 눌렸을 경우 key_down에 1 대입
-            uint8_t key_down = (HAL_GPIO_ReadPin(GPIOA, col_pins[col]) == GPIO_PIN_RESET);
+            uint8_t pressed = (HAL_GPIO_ReadPin(GPIOA, col_pins[col]) == GPIO_PIN_RESET);
             
             /*
                         Col0  Col1  Col2  Col3
@@ -291,7 +388,7 @@ void ScanKeypad() {
             uint8_t key_index = row * 4 + col;  // 키 인덱스 계산
             
             keys[key_index].key_char = keymap[row][col];  // 문자 매핑
-            UpdateKeyState(key_index, key_down, now);  // 상태 업데이트
+            UpdateKeyState(key_index, pressed, current_tick);  // 상태 업데이트
 
         }
         
@@ -399,6 +496,7 @@ uint32_t last_scan_time = 0;
         }
         */
 
+        // 50ms마다 체크
         uint32_t current_scan_time = HAL_GetTick();
         if (current_scan_time - last_scan_time >= 50) {
             ScanKeypad();
