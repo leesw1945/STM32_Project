@@ -111,6 +111,7 @@ int main(void)
       
       if (pwm_val >= 999) dir = 0;
       if (pwm_val == 0) dir = 1;
+      
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
