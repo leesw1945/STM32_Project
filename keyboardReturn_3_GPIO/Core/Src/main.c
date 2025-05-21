@@ -426,6 +426,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
         uart_tx_ready = 1;   // 다음 전송 가능 상태로 설정
+        
     }
 }
 
@@ -460,7 +461,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-    
+     
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */

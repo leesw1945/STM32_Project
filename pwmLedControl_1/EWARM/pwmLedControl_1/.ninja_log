@@ -45,3 +45,6 @@
 1	159	7693382298425443	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Obj/Application/User/Core/main.o	3fb0dfb823cfc178
 172	256	7693382299429996	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Exe/pwmLedControl_1.out	dbc38752df319740
 297	318	7693382300113622	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Exe/pwmLedControl_1.hex	6f0505d4dcdcb87b
+2	263	7694895076469076	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Obj/Application/User/Core/main.o	3fb0dfb823cfc178
+268	359	7694895077659587	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Exe/pwmLedControl_1.out	dbc38752df319740
+370	387	7694895078037165	C:/stm32/pwmLedControl_1/EWARM/pwmLedControl_1/Exe/pwmLedControl_1.hex	6f0505d4dcdcb87b
